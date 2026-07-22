@@ -1,0 +1,875 @@
+<title>VAG Agency — AI Automation for WhatsApp</title>
+<style>
+:root {
+  --navy: #0A2540;
+  --navy-light: #0D3B66;
+  --mint: #00D4AA;
+  --mint-dark: #00B894;
+  --blue: #38BDF8;
+  --purple: #A78BFA;
+  --coral: #F472B6;
+  --slate: #94A3B8;
+  --slate-light: #CBD5E1;
+  --surface: #F8FAFC;
+  --card: #1E293B;
+  --card-border: #334155;
+  --text: #0F172A;
+  --text-light: #64748B;
+  --white: #FFFFFF;
+  --font: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-mono: 'Cascadia Code', 'JetBrains Mono', 'Fira Code', monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --surface: #0F172A;
+    --text: #F1F5F9;
+    --text-light: #94A3B8;
+    --card: #1E293B;
+    --card-border: #334155;
+  }
+}
+:root[data-theme="dark"] {
+  --surface: #0F172A;
+  --text: #F1F5F9;
+  --text-light: #94A3B8;
+  --card: #1E293B;
+  --card-border: #334155;
+}
+:root[data-theme="light"] {
+  --surface: #F8FAFC;
+  --text: #0F172A;
+  --text-light: #64748B;
+  --card: #FFFFFF;
+  --card-border: #E2E8F0;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { font-family: var(--font); color: var(--white); line-height: 1.6; overflow-x: hidden; }
+
+/* NAV */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 16px 48px;
+  background: rgba(10, 37, 64, 0.85);
+  backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(0, 212, 170, 0.1);
+  transition: all 0.3s;
+}
+.nav-logo {
+  font-size: 24px; font-weight: 800; letter-spacing: -1px;
+  color: var(--white); text-decoration: none;
+}
+.nav-logo span { color: var(--mint); }
+.nav-links { display: flex; gap: 32px; list-style: none; }
+.nav-links a {
+  color: var(--slate-light); text-decoration: none; font-size: 14px;
+  font-weight: 500; letter-spacing: 0.5px; transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--mint); }
+.nav-cta {
+  background: var(--mint); color: var(--navy); border: none;
+  padding: 10px 24px; border-radius: 8px; font-weight: 700;
+  font-size: 14px; cursor: pointer; text-decoration: none; transition: all 0.2s;
+}
+.nav-cta:hover { background: var(--mint-dark); transform: translateY(-1px); }
+
+/* HERO */
+.hero {
+  min-height: 100vh; display: flex; align-items: center;
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 50%, #0E4D6B 100%);
+  position: relative; overflow: hidden; padding: 120px 48px 80px;
+}
+.hero::before {
+  content: ''; position: absolute; top: -200px; right: -200px;
+  width: 600px; height: 600px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(0,212,170,0.12) 0%, transparent 70%);
+}
+.hero::after {
+  content: ''; position: absolute; bottom: -100px; left: -100px;
+  width: 400px; height: 400px; border-radius: 50%;
+  background: radial-gradient(circle, rgba(56,189,248,0.08) 0%, transparent 70%);
+}
+.hero-content { max-width: 1200px; margin: 0 auto; width: 100%; display: flex; align-items: center; gap: 80px; position: relative; z-index: 1; }
+.hero-text { flex: 1; }
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(0,212,170,0.1); border: 1px solid rgba(0,212,170,0.3);
+  border-radius: 100px; padding: 6px 16px; font-size: 13px;
+  color: var(--mint); font-weight: 600; margin-bottom: 24px;
+}
+.hero-badge::before { content: ''; width: 6px; height: 6px; background: var(--mint); border-radius: 50%; }
+h1 {
+  font-size: clamp(36px, 5vw, 64px); font-weight: 800;
+  line-height: 1.1; letter-spacing: -2px; margin-bottom: 24px;
+}
+h1 .gradient {
+  background: linear-gradient(135deg, var(--mint), var(--blue));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.hero-sub {
+  font-size: 20px; color: var(--slate); line-height: 1.7;
+  max-width: 520px; margin-bottom: 40px;
+}
+.hero-actions { display: flex; gap: 16px; flex-wrap: wrap; }
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--mint); color: var(--navy); border: none;
+  padding: 16px 32px; border-radius: 12px; font-weight: 700;
+  font-size: 16px; cursor: pointer; text-decoration: none; transition: all 0.3s;
+}
+.btn-primary:hover { background: var(--mint-dark); transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,212,170,0.3); }
+.btn-secondary {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: transparent; color: var(--white); border: 1px solid var(--card-border);
+  padding: 16px 32px; border-radius: 12px; font-weight: 600;
+  font-size: 16px; cursor: pointer; text-decoration: none; transition: all 0.3s;
+}
+.btn-secondary:hover { border-color: var(--mint); color: var(--mint); }
+
+/* Hero Phone Mockup */
+.hero-visual { flex: 0 0 380px; }
+.phone-mock {
+  width: 320px; background: var(--card); border-radius: 32px;
+  padding: 12px; box-shadow: 0 40px 80px rgba(0,0,0,0.4);
+  border: 1px solid var(--card-border);
+}
+.phone-screen { background: #111827; border-radius: 24px; overflow: hidden; }
+.wa-header {
+  background: #075E54; padding: 16px; display: flex; align-items: center; gap: 12px;
+}
+.wa-avatar {
+  width: 36px; height: 36px; background: var(--mint); border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800; font-size: 14px; color: var(--navy);
+}
+.wa-name { font-size: 15px; font-weight: 600; }
+.wa-status { font-size: 11px; color: #25D366; }
+.wa-chat { padding: 16px; display: flex; flex-direction: column; gap: 8px; min-height: 360px; }
+.wa-msg {
+  max-width: 85%; padding: 10px 14px; border-radius: 12px;
+  font-size: 13px; line-height: 1.5;
+}
+.wa-msg.bot { background: #1F2937; align-self: flex-start; border-bottom-left-radius: 4px; }
+.wa-msg.user { background: #005C4B; align-self: flex-end; border-bottom-right-radius: 4px; }
+.wa-msg .time { font-size: 10px; color: #6B7280; text-align: right; margin-top: 4px; }
+
+/* STATS BAR */
+.stats-bar {
+  background: var(--navy); border-top: 1px solid rgba(0,212,170,0.15);
+  border-bottom: 1px solid rgba(0,212,170,0.15);
+  padding: 48px;
+}
+.stats-grid {
+  max-width: 1000px; margin: 0 auto;
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; text-align: center;
+}
+.stat-num { font-size: 48px; font-weight: 800; color: var(--mint); letter-spacing: -2px; }
+.stat-label { font-size: 14px; color: var(--slate); margin-top: 4px; font-weight: 500; }
+
+/* SECTIONS */
+section { padding: 100px 48px; }
+.section-dark { background: var(--navy); }
+.section-darker { background: #06192E; }
+.section-light { background: var(--surface); color: var(--text); }
+.section-header { text-align: center; margin-bottom: 64px; }
+.section-eyebrow {
+  font-size: 13px; font-weight: 700; letter-spacing: 3px;
+  text-transform: uppercase; color: var(--mint); margin-bottom: 16px;
+}
+.section-title {
+  font-size: clamp(28px, 4vw, 44px); font-weight: 800;
+  letter-spacing: -1.5px; margin-bottom: 16px;
+}
+.section-light .section-title { color: var(--text); }
+.section-sub { font-size: 18px; color: var(--slate); max-width: 600px; margin: 0 auto; }
+.section-light .section-sub { color: var(--text-light); }
+
+/* SERVICES */
+.services-grid {
+  max-width: 1100px; margin: 0 auto;
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 24px;
+}
+.service-card {
+  background: var(--card); border: 1px solid var(--card-border);
+  border-radius: 20px; padding: 40px 32px; transition: all 0.3s;
+  position: relative; overflow: hidden;
+}
+.service-card:hover { transform: translateY(-4px); border-color: var(--mint); }
+.service-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  background: linear-gradient(90deg, var(--mint), var(--blue));
+  opacity: 0; transition: opacity 0.3s;
+}
+.service-card:hover::before { opacity: 1; }
+.service-icon {
+  width: 56px; height: 56px; border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px; margin-bottom: 24px;
+}
+.service-icon.wa { background: rgba(37, 211, 102, 0.15); }
+.service-icon.auto { background: rgba(56, 189, 248, 0.15); }
+.service-icon.ai { background: rgba(167, 139, 250, 0.15); }
+.service-icon.snap { background: rgba(244, 114, 182, 0.15); }
+.service-card h3 { font-size: 22px; font-weight: 700; margin-bottom: 12px; letter-spacing: -0.5px; }
+.service-card p { font-size: 15px; color: var(--slate); line-height: 1.7; }
+.section-light .service-card { background: var(--card); }
+.section-light .service-card h3 { color: var(--text); }
+.section-light .service-card p { color: var(--text-light); }
+
+/* INDUSTRIES */
+.industries-container { max-width: 1100px; margin: 0 auto; }
+.industry-tabs {
+  display: flex; gap: 8px; justify-content: center; margin-bottom: 48px; flex-wrap: wrap;
+}
+.industry-tab {
+  padding: 12px 24px; border-radius: 100px; border: 1px solid var(--card-border);
+  background: transparent; color: var(--slate-light); font-size: 14px;
+  font-weight: 600; cursor: pointer; transition: all 0.3s; font-family: var(--font);
+}
+.industry-tab.active, .industry-tab:hover {
+  background: var(--mint); color: var(--navy); border-color: var(--mint);
+}
+.industry-panel { display: none; }
+.industry-panel.active { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
+.industry-info h3 { font-size: 32px; font-weight: 700; margin-bottom: 16px; letter-spacing: -1px; }
+.industry-info p { font-size: 16px; color: var(--slate); margin-bottom: 24px; line-height: 1.7; }
+.industry-features { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+.industry-features li {
+  display: flex; align-items: center; gap: 12px;
+  font-size: 15px; color: var(--slate-light);
+}
+.industry-features li::before {
+  content: '\2713'; width: 24px; height: 24px; border-radius: 50%;
+  background: rgba(0,212,170,0.15); color: var(--mint);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700; flex-shrink: 0;
+}
+.industry-mockup {
+  background: var(--card); border-radius: 20px; padding: 32px;
+  border: 1px solid var(--card-border);
+}
+.industry-mockup h4 { font-size: 14px; color: var(--mint); font-weight: 600; margin-bottom: 16px; letter-spacing: 1px; }
+.mock-msg {
+  padding: 10px 14px; border-radius: 12px; font-size: 13px;
+  margin-bottom: 8px; max-width: 90%; line-height: 1.5;
+}
+.mock-msg.bot { background: #1F2937; border-bottom-left-radius: 4px; }
+.mock-msg.user { background: #005C4B; margin-left: auto; border-bottom-right-radius: 4px; }
+
+/* HOW IT WORKS */
+.steps-grid {
+  max-width: 1000px; margin: 0 auto;
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px;
+}
+.step {
+  text-align: center; position: relative;
+}
+.step-num {
+  width: 64px; height: 64px; border-radius: 50%; margin: 0 auto 20px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 24px; font-weight: 800; color: var(--navy);
+}
+.step:nth-child(1) .step-num { background: var(--mint); }
+.step:nth-child(2) .step-num { background: var(--blue); }
+.step:nth-child(3) .step-num { background: var(--purple); }
+.step:nth-child(4) .step-num { background: var(--coral); }
+.step h4 { font-size: 18px; font-weight: 700; margin-bottom: 8px; }
+.step p { font-size: 14px; color: var(--slate); line-height: 1.6; }
+.section-light .step h4 { color: var(--text); }
+.section-light .step p { color: var(--text-light); }
+
+/* CASE STUDY */
+.case-study {
+  max-width: 1100px; margin: 0 auto;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: center;
+}
+.case-badge {
+  display: inline-block; background: rgba(0,212,170,0.1);
+  border: 1px solid rgba(0,212,170,0.3); border-radius: 8px;
+  padding: 4px 12px; font-size: 12px; font-weight: 700;
+  color: var(--mint); letter-spacing: 1px; margin-bottom: 20px;
+}
+.case-study h3 { font-size: 32px; font-weight: 800; margin-bottom: 16px; letter-spacing: -1px; }
+.case-study p { font-size: 16px; color: var(--slate); line-height: 1.7; margin-bottom: 24px; }
+.case-stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; margin-bottom: 32px; }
+.case-stat {
+  background: var(--card); border: 1px solid var(--card-border);
+  border-radius: 12px; padding: 20px;
+}
+.case-stat-num { font-size: 28px; font-weight: 800; color: var(--mint); }
+.case-stat-label { font-size: 13px; color: var(--slate); margin-top: 4px; }
+
+/* PRICING */
+.pricing-grid {
+  max-width: 1100px; margin: 0 auto;
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+}
+.price-card {
+  background: var(--card); border: 1px solid var(--card-border);
+  border-radius: 20px; padding: 40px 32px; transition: all 0.3s;
+  position: relative;
+}
+.price-card.featured {
+  border-color: var(--mint);
+  box-shadow: 0 0 40px rgba(0,212,170,0.1);
+}
+.price-card.featured::before {
+  content: 'MOST POPULAR'; position: absolute; top: -12px; left: 50%;
+  transform: translateX(-50%); background: var(--mint); color: var(--navy);
+  padding: 4px 16px; border-radius: 100px; font-size: 11px;
+  font-weight: 800; letter-spacing: 1px;
+}
+.price-tier { font-size: 14px; font-weight: 700; color: var(--mint); letter-spacing: 1px; margin-bottom: 8px; }
+.price-amount { font-size: 48px; font-weight: 800; letter-spacing: -2px; margin-bottom: 4px; }
+.price-amount span { font-size: 18px; font-weight: 500; color: var(--slate); }
+.price-desc { font-size: 14px; color: var(--slate); margin-bottom: 32px; }
+.price-features { list-style: none; margin-bottom: 32px; display: flex; flex-direction: column; gap: 12px; }
+.price-features li { font-size: 14px; color: var(--slate-light); display: flex; align-items: center; gap: 10px; }
+.price-features li::before { content: '\2713'; color: var(--mint); font-weight: 700; }
+.price-features li.no::before { content: '\2717'; color: #475569; }
+.price-features li.no { color: #475569; }
+.price-btn {
+  display: block; width: 100%; padding: 14px; border-radius: 12px;
+  border: 1px solid var(--card-border); background: transparent;
+  color: var(--white); font-size: 15px; font-weight: 700;
+  cursor: pointer; transition: all 0.3s; text-decoration: none; text-align: center;
+  font-family: var(--font);
+}
+.price-btn:hover { border-color: var(--mint); color: var(--mint); }
+.price-card.featured .price-btn {
+  background: var(--mint); color: var(--navy); border-color: var(--mint);
+}
+.price-card.featured .price-btn:hover { background: var(--mint-dark); }
+.section-light .price-card h3, .section-light .price-amount { color: var(--text); }
+
+/* TECH STACK */
+.tech-grid {
+  max-width: 800px; margin: 0 auto;
+  display: flex; flex-wrap: wrap; gap: 16px; justify-content: center;
+}
+.tech-pill {
+  background: var(--card); border: 1px solid var(--card-border);
+  border-radius: 100px; padding: 12px 24px;
+  font-family: var(--font-mono); font-size: 14px; color: var(--slate-light);
+  font-weight: 500; transition: all 0.3s;
+}
+.tech-pill:hover { border-color: var(--mint); color: var(--mint); }
+
+/* FAQ */
+.faq-list { max-width: 700px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; }
+.faq-item {
+  background: var(--card); border: 1px solid var(--card-border);
+  border-radius: 16px; overflow: hidden;
+}
+.faq-q {
+  padding: 20px 24px; font-size: 16px; font-weight: 600;
+  cursor: pointer; display: flex; justify-content: space-between; align-items: center;
+  transition: color 0.2s; user-select: none;
+}
+.faq-q:hover { color: var(--mint); }
+.faq-q::after { content: '+'; font-size: 24px; color: var(--mint); transition: transform 0.3s; }
+.faq-item.open .faq-q::after { transform: rotate(45deg); }
+.faq-a {
+  max-height: 0; overflow: hidden; transition: max-height 0.3s ease, padding 0.3s;
+  font-size: 15px; color: var(--slate); line-height: 1.7; padding: 0 24px;
+}
+.faq-item.open .faq-a { max-height: 200px; padding: 0 24px 20px; }
+.section-light .faq-q { color: var(--text); }
+.section-light .faq-item.open .faq-q { color: var(--mint); }
+
+/* CTA */
+.cta-section {
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-light) 100%);
+  text-align: center; padding: 100px 48px;
+}
+.cta-section h2 {
+  font-size: clamp(28px, 4vw, 44px); font-weight: 800;
+  letter-spacing: -1.5px; margin-bottom: 16px;
+}
+.cta-section p { font-size: 18px; color: var(--slate); margin-bottom: 40px; max-width: 500px; margin-left: auto; margin-right: auto; }
+.cta-buttons { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; }
+
+/* FOOTER */
+footer {
+  background: #06192E; padding: 48px; text-align: center;
+  border-top: 1px solid rgba(0,212,170,0.1);
+}
+footer p { font-size: 14px; color: var(--slate); }
+footer a { color: var(--mint); text-decoration: none; }
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  nav { padding: 12px 24px; }
+  .nav-links { display: none; }
+  .hero { padding: 100px 24px 60px; }
+  .hero-content { flex-direction: column; gap: 40px; }
+  .hero-visual { flex: none; }
+  section { padding: 64px 24px; }
+  .services-grid, .pricing-grid { grid-template-columns: 1fr; max-width: 400px; }
+  .steps-grid { grid-template-columns: repeat(2, 1fr); }
+  .industry-panel.active { grid-template-columns: 1fr; }
+  .case-study { grid-template-columns: 1fr; }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 480px) {
+  .steps-grid { grid-template-columns: 1fr; }
+  .case-stats { grid-template-columns: 1fr; }
+  .phone-mock { width: 280px; }
+}
+</style>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo"><span>VAG</span> Agency</a>
+  <ul class="nav-links">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#industries">Industries</a></li>
+    <li><a href="#how-it-works">How It Works</a></li>
+    <li><a href="#pricing">Pricing</a></li>
+    <li><a href="#faq">FAQ</a></li>
+  </ul>
+  <a href="https://wa.me/919989618192?text=Hi%20VAG%20Agency!%20I'm%20interested%20in%20AI%20automation%20for%20my%20business." class="nav-cta" target="_blank">Get Started</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-content">
+    <div class="hero-text">
+      <div class="hero-badge">AI Automation Agency</div>
+      <h1>We Build AI That <span class="gradient">Sells, Hires, and Supports</span> — All on WhatsApp</h1>
+      <p class="hero-sub">Custom AI-powered WhatsApp bots and workflow automation that handle real business tasks. Not chatbots — business engines.</p>
+      <div class="hero-actions">
+        <a href="https://wa.me/919989618192?text=Hi%20VAG%20Agency!%20I%20need%20an%20AI%20bot%20for%20my%20business." class="btn-primary" target="_blank">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.625.846 5.059 2.284 7.034L.789 23.492a.5.5 0 00.611.611l4.458-1.495A11.952 11.952 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-2.37 0-4.567-.83-6.284-2.213l-.439-.349-2.9.972.972-2.9-.349-.439A9.965 9.965 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/></svg>
+          Chat on WhatsApp
+        </a>
+        <a href="#case-study" class="btn-secondary">See Our Work</a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="phone-mock">
+        <div class="phone-screen">
+          <div class="wa-header">
+            <div class="wa-avatar">V</div>
+            <div>
+              <div class="wa-name">VAG AI Bot</div>
+              <div class="wa-status">online</div>
+            </div>
+          </div>
+          <div class="wa-chat">
+            <div class="wa-msg bot">Welcome to ShopEase! How can I help you today?<div class="time">10:30 AM</div></div>
+            <div class="wa-msg user">Where's my order #4521?<div class="time">10:31 AM</div></div>
+            <div class="wa-msg bot">Your order is out for delivery! Expected by 2 PM today. Track here: track.shopease.in/4521<div class="time">10:31 AM</div></div>
+            <div class="wa-msg user">Can I return item 2?<div class="time">10:32 AM</div></div>
+            <div class="wa-msg bot">Return initiated for "Blue Denim Jacket". Pickup scheduled for tomorrow 10 AM - 1 PM. Refund in 3-5 days.<div class="time">10:32 AM</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats-bar">
+  <div class="stats-grid">
+    <div><div class="stat-num">30s</div><div class="stat-label">Average Response Time</div></div>
+    <div><div class="stat-num">10+</div><div class="stat-label">Languages Supported</div></div>
+    <div><div class="stat-num">24/7</div><div class="stat-label">Always Available</div></div>
+    <div><div class="stat-num">85%</div><div class="stat-label">Query Auto-Resolution</div></div>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section id="services" class="section-dark">
+  <div class="section-header">
+    <div class="section-eyebrow">What We Build</div>
+    <div class="section-title">Four Pillars of Business Automation</div>
+    <div class="section-sub">Every solution is custom-built for your workflow, not a template.</div>
+  </div>
+  <div class="services-grid">
+    <div class="service-card">
+      <div class="service-icon wa">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="#25D366"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/></svg>
+      </div>
+      <h3>WhatsApp AI Bots</h3>
+      <p>AI assistants that run on WhatsApp — the app your customers already use. Resume screening, order tracking, appointment booking, lead capture. Real AI, not keyword matching.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon auto">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="#38BDF8"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+      </div>
+      <h3>n8n Workflow Automation</h3>
+      <p>Backend automation that connects everything — CRM updates, email sequences, database syncs, scheduled reports. Self-hosted, no per-message fees, you own your data.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon ai">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="#A78BFA"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83" stroke="#A78BFA" stroke-width="2" fill="none"/></svg>
+      </div>
+      <h3>Custom AI Solutions</h3>
+      <p>AI scoring, document processing, multi-language translation, smart recommendations. Powered by Google Gemini and Claude — tuned to your business rules.</p>
+    </div>
+    <div class="service-card">
+      <div class="service-icon snap">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#F472B6" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+      </div>
+      <h3>SnapMark — AI Attendance</h3>
+      <p>One classroom photo marks the whole class. Face-recognition attendance for schools and colleges — students enroll once, then a single photo replaces roll call. Teacher review, WhatsApp summaries, and full audit trail built in.</p>
+    </div>
+  </div>
+</section>
+
+<!-- INDUSTRIES -->
+<section id="industries" class="section-darker">
+  <div class="section-header">
+    <div class="section-eyebrow">Industries</div>
+    <div class="section-title">Built for Your Business</div>
+    <div class="section-sub">We've automated workflows across four high-demand verticals.</div>
+  </div>
+  <div class="industries-container">
+    <div class="industry-tabs">
+      <button class="industry-tab active" onclick="showIndustry('hiring')">Education & Hiring</button>
+      <button class="industry-tab" onclick="showIndustry('ecommerce')">E-commerce</button>
+      <button class="industry-tab" onclick="showIndustry('healthcare')">Healthcare</button>
+      <button class="industry-tab" onclick="showIndustry('realestate')">Real Estate</button>
+    </div>
+
+    <div id="panel-hiring" class="industry-panel active">
+      <div class="industry-info">
+        <h3>AI Hiring Assistant</h3>
+        <p>Candidates message your WhatsApp number, browse open jobs, send resumes, and get AI-scored in 30 seconds. You just pick the best from a ranked dashboard.</p>
+        <ul class="industry-features">
+          <li>AI resume screening with custom scoring criteria</li>
+          <li>Interview scheduling with auto-reminders</li>
+          <li>Candidate ranking dashboard</li>
+          <li>Offer letter automation</li>
+          <li>Referral tracking with rewards</li>
+          <li>Bulk candidate import (CSV/JSON)</li>
+        </ul>
+      </div>
+      <div class="industry-mockup">
+        <h4>WHATSAPP PREVIEW</h4>
+        <div class="mock-msg bot">Hi! I'm the ARIA Hiring Bot. Send HIRE to get started.</div>
+        <div class="mock-msg user">HIRE</div>
+        <div class="mock-msg bot">Found 3 open positions!<br>1. Math Teacher<br>2. Science Teacher<br>3. Admin Assistant<br><br>Reply with a number to apply.</div>
+        <div class="mock-msg user">1</div>
+        <div class="mock-msg bot">Please send your resume (PDF or image) for Math Teacher position.</div>
+        <div class="mock-msg user">[Resume.pdf]</div>
+        <div class="mock-msg bot">Resume scored: 87/100. Strong match! Available interview slots:<br>- Mon 10 AM<br>- Tue 2 PM<br>- Wed 11 AM</div>
+      </div>
+    </div>
+
+    <div id="panel-ecommerce" class="industry-panel">
+      <div class="industry-info">
+        <h3>E-commerce AI Support</h3>
+        <p>Your customers get instant order tracking, product recommendations, and support — all through WhatsApp. Recover abandoned carts automatically with AI-personalized messages.</p>
+        <ul class="industry-features">
+          <li>Order tracking with real-time status</li>
+          <li>Abandoned cart recovery (23% average recovery rate)</li>
+          <li>AI product recommendations</li>
+          <li>Return and exchange processing</li>
+          <li>Post-delivery feedback collection</li>
+          <li>Daily sales and support reports</li>
+        </ul>
+      </div>
+      <div class="industry-mockup">
+        <h4>WHATSAPP PREVIEW</h4>
+        <div class="mock-msg bot">Hi! Welcome to ShopEase. How can I help?</div>
+        <div class="mock-msg user">Where's my order?</div>
+        <div class="mock-msg bot">Please share your order number or phone number.</div>
+        <div class="mock-msg user">#ORD-4521</div>
+        <div class="mock-msg bot">Order #4521 - Out for delivery!<br>Expected by 2:00 PM today.<br>Items: Blue Denim Jacket, White Sneakers<br><br>Track live: track.shopease.in/4521</div>
+      </div>
+    </div>
+
+    <div id="panel-healthcare" class="industry-panel">
+      <div class="industry-info">
+        <h3>Healthcare Automation</h3>
+        <p>Patients book appointments, receive reminders, get prescription updates, and ask health queries — all on WhatsApp. Reduce no-shows by 40% with automated reminders.</p>
+        <ul class="industry-features">
+          <li>Appointment booking with slot management</li>
+          <li>24-hour automated reminders</li>
+          <li>Prescription refill notifications</li>
+          <li>Patient follow-up sequences</li>
+          <li>Lab report delivery via WhatsApp</li>
+          <li>Staff scheduling and notifications</li>
+        </ul>
+      </div>
+      <div class="industry-mockup">
+        <h4>WHATSAPP PREVIEW</h4>
+        <div class="mock-msg bot">Welcome to City Clinic! Book an appointment or check your reports.</div>
+        <div class="mock-msg user">Book appointment with Dr. Sharma</div>
+        <div class="mock-msg bot">Dr. Sharma's available slots:<br>- Today 4:30 PM<br>- Tomorrow 10:00 AM<br>- Tomorrow 3:00 PM<br><br>Reply with your preferred time.</div>
+        <div class="mock-msg user">Tomorrow 10 AM</div>
+        <div class="mock-msg bot">Booked! Dr. Sharma, Tomorrow 10:00 AM. You'll get a reminder 1 hour before. Please bring your insurance card.</div>
+      </div>
+    </div>
+
+    <div id="panel-realestate" class="industry-panel">
+      <div class="industry-info">
+        <h3>Real Estate Lead Engine</h3>
+        <p>Qualify leads instantly on WhatsApp. Match buyers to properties based on budget, location, and preferences. Schedule viewings automatically and follow up until they close.</p>
+        <ul class="industry-features">
+          <li>AI lead qualification (budget, timeline, preferences)</li>
+          <li>Property matching and recommendations</li>
+          <li>Viewing scheduling with calendar sync</li>
+          <li>Automated follow-up sequences</li>
+          <li>Virtual tour link sharing</li>
+          <li>Agent assignment and notifications</li>
+        </ul>
+      </div>
+      <div class="industry-mockup">
+        <h4>WHATSAPP PREVIEW</h4>
+        <div class="mock-msg bot">Welcome to Prime Realty! Looking to buy, rent, or sell?</div>
+        <div class="mock-msg user">Buy a 2BHK in Hyderabad</div>
+        <div class="mock-msg bot">Great! A few quick questions:<br>1. Budget range?<br>2. Preferred areas?<br>3. Move-in timeline?</div>
+        <div class="mock-msg user">50-70 lakhs, Gachibowli or Kondapur, 3 months</div>
+        <div class="mock-msg bot">Found 4 matches!<br><br>1. Prestige Heights, Kondapur - 62L, 2BHK, 1200 sqft<br>2. Aparna Cyberlife, Gachibowli - 68L, 2BHK, 1350 sqft<br><br>Want to schedule a viewing?</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section id="how-it-works" class="section-dark">
+  <div class="section-header">
+    <div class="section-eyebrow">Process</div>
+    <div class="section-title">From Idea to Live Bot in 7 Days</div>
+    <div class="section-sub">We handle everything — you just tell us what your business needs.</div>
+  </div>
+  <div class="steps-grid">
+    <div class="step">
+      <div class="step-num">1</div>
+      <h4>Consult</h4>
+      <p>30-minute WhatsApp call. We map your workflow, identify automation opportunities, and scope the project.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <h4>Design</h4>
+      <p>We design your bot's conversation flows, database schema, and integration points. You approve before we build.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <h4>Build</h4>
+      <p>Custom n8n workflows, AI configuration, WhatsApp setup, database provisioning. Full development in 5-7 days.</p>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <h4>Launch</h4>
+      <p>We test with your team, go live, and monitor for 30 days. Training included so your team owns it.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CASE STUDY -->
+<section id="case-study" class="section-darker">
+  <div class="section-header">
+    <div class="section-eyebrow">Case Study</div>
+    <div class="section-title">ARIA AI Hiring Assistant</div>
+    <div class="section-sub">Built for education institutions to screen and hire teachers via WhatsApp.</div>
+  </div>
+  <div class="case-study">
+    <div>
+      <div class="case-badge">LIVE IN PRODUCTION</div>
+      <h3>From 200 Resumes to Top 5 Candidates in Minutes</h3>
+      <p>A school network needed to hire teachers across 3 branches. Manual screening took 2 weeks per role. We built an AI hiring assistant that runs entirely on WhatsApp.</p>
+      <div class="case-stats">
+        <div class="case-stat"><div class="case-stat-num">30s</div><div class="case-stat-label">Per resume screening</div></div>
+        <div class="case-stat"><div class="case-stat-num">15+</div><div class="case-stat-label">Automated workflows</div></div>
+        <div class="case-stat"><div class="case-stat-num">6</div><div class="case-stat-label">Languages supported</div></div>
+        <div class="case-stat"><div class="case-stat-num">24/7</div><div class="case-stat-label">Candidate availability</div></div>
+      </div>
+      <a href="https://wa.me/919989618192?text=I%20want%20to%20see%20the%20ARIA%20hiring%20bot%20demo" class="btn-primary" target="_blank">See Live Demo</a>
+    </div>
+    <div class="industry-mockup">
+      <h4>SYSTEM ARCHITECTURE</h4>
+      <div style="font-size:13px;color:var(--slate-light);line-height:2;font-family:var(--font-mono)">
+        <div style="color:var(--mint)">WhatsApp Business API</div>
+        <div style="padding-left:20px">-> n8n Webhook Router</div>
+        <div style="padding-left:40px">-> AI Agent (Gemini Pro)</div>
+        <div style="padding-left:60px">-> Resume Parser Tool</div>
+        <div style="padding-left:60px">-> Job Search Tool</div>
+        <div style="padding-left:60px">-> Interview Scheduler</div>
+        <div style="padding-left:60px">-> Offer Letter Sender</div>
+        <div style="padding-left:60px">-> Referral Tracker</div>
+        <div style="padding-left:40px">-> PostgreSQL (Supabase)</div>
+        <div style="padding-left:40px">-> Admin Dashboard</div>
+        <div style="padding-left:40px">-> Email Notifications</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section id="pricing" class="section-dark">
+  <div class="section-header">
+    <div class="section-eyebrow">Pricing</div>
+    <div class="section-title">Simple, Transparent Pricing</div>
+    <div class="section-sub">One-time setup fee. Optional monthly hosting and maintenance.</div>
+  </div>
+  <div class="pricing-grid">
+    <div class="price-card">
+      <div class="price-tier">STARTER</div>
+      <div class="price-amount">$100 <span>one-time</span></div>
+      <div class="price-desc">Perfect for solopreneurs and small stores</div>
+      <ul class="price-features">
+        <li>1 conversation flow</li>
+        <li>Up to 5 automated responses</li>
+        <li>WhatsApp button support</li>
+        <li>Basic n8n workflow</li>
+        <li>3-day delivery</li>
+        <li class="no">Database integration</li>
+        <li class="no">Multi-language</li>
+        <li class="no">Analytics dashboard</li>
+      </ul>
+      <a href="https://wa.me/919989618192?text=Hi!%20I'm%20interested%20in%20the%20Starter%20plan." class="price-btn" target="_blank">Get Started</a>
+    </div>
+    <div class="price-card featured">
+      <div class="price-tier">PROFESSIONAL</div>
+      <div class="price-amount">$300 <span>one-time</span></div>
+      <div class="price-desc">Full AI bot for growing businesses</div>
+      <ul class="price-features">
+        <li>Full AI conversation</li>
+        <li>Database integration</li>
+        <li>Up to 3 workflow automations</li>
+        <li>Multi-language support</li>
+        <li>Admin notifications</li>
+        <li>5-day delivery</li>
+        <li class="no">Analytics dashboard</li>
+        <li class="no">Custom branding</li>
+      </ul>
+      <a href="https://wa.me/919989618192?text=Hi!%20I'm%20interested%20in%20the%20Professional%20plan." class="price-btn" target="_blank">Get Started</a>
+    </div>
+    <div class="price-card">
+      <div class="price-tier">ENTERPRISE</div>
+      <div class="price-amount">$500 <span>one-time</span></div>
+      <div class="price-desc">Complete business automation suite</div>
+      <ul class="price-features">
+        <li>Everything in Professional</li>
+        <li>Unlimited workflows</li>
+        <li>Analytics dashboard</li>
+        <li>CRM/Sheets integration</li>
+        <li>Scheduled automations</li>
+        <li>Custom AI personality</li>
+        <li>7-day delivery</li>
+        <li>30 days support</li>
+      </ul>
+      <a href="https://wa.me/919989618192?text=Hi!%20I'm%20interested%20in%20the%20Enterprise%20plan." class="price-btn" target="_blank">Get Started</a>
+    </div>
+  </div>
+  <p style="text-align:center;margin-top:32px;font-size:14px;color:var(--slate)">Optional: Monthly hosting & maintenance from $50/mo. WhatsApp API setup add-on: $50.</p>
+</section>
+
+<!-- TECH STACK -->
+<section class="section-darker">
+  <div class="section-header">
+    <div class="section-eyebrow">Technology</div>
+    <div class="section-title">Built on Battle-Tested Infrastructure</div>
+    <div class="section-sub">Enterprise-grade tools, self-hosted. No vendor lock-in.</div>
+  </div>
+  <div class="tech-grid">
+    <div class="tech-pill">n8n</div>
+    <div class="tech-pill">WhatsApp Business API</div>
+    <div class="tech-pill">PostgreSQL</div>
+    <div class="tech-pill">Supabase</div>
+    <div class="tech-pill">Google Gemini</div>
+    <div class="tech-pill">Claude AI</div>
+    <div class="tech-pill">Node.js</div>
+    <div class="tech-pill">Razorpay</div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq" class="section-dark">
+  <div class="section-header">
+    <div class="section-eyebrow">FAQ</div>
+    <div class="section-title">Common Questions</div>
+  </div>
+  <div class="faq-list">
+    <div class="faq-item">
+      <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">Is this a template or custom-built?</div>
+      <div class="faq-a">100% custom. Every bot is built from scratch for your specific business workflow. No templates, no cookie-cutter solutions.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">Do I need a WhatsApp Business API account?</div>
+      <div class="faq-a">Yes. We can guide you through setup (takes about 15 minutes) or set it up for you as an add-on for $50.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">What about message costs?</div>
+      <div class="faq-a">WhatsApp Business API charges per conversation (~$0.005-$0.08 depending on country). Our bot has no per-message fees since it's self-hosted on your infrastructure.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">Can the bot hand off to a human?</div>
+      <div class="faq-a">Yes! When the AI can't handle a query, it notifies your team via WhatsApp and email, and seamlessly passes the conversation to a human agent.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">What languages does it support?</div>
+      <div class="faq-a">English, Hindi, Telugu, Tamil, Kannada, Malayalam, and more. The AI auto-detects the customer's language and responds accordingly.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">Can you integrate with my existing tools?</div>
+      <div class="faq-a">Yes — Google Sheets, Airtable, HubSpot, Zoho, Stripe, Razorpay, custom APIs, databases, email, SMS. If it has an API, we can connect it.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">How long does it take to build?</div>
+      <div class="faq-a">3-7 days depending on complexity. Starter bots ship in 3 days. Enterprise solutions with multiple workflows take up to 7 days.</div>
+    </div>
+    <div class="faq-item">
+      <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">Do I own the code?</div>
+      <div class="faq-a">Yes. You get full source code for all workflows, database schemas, and configurations. Self-hosted on your infrastructure. Zero lock-in.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <h2>Ready to Automate Your Business?</h2>
+  <p>Tell us what you need. We'll build it in a week.</p>
+  <div class="cta-buttons">
+    <a href="https://wa.me/919989618192?text=Hi%20VAG%20Agency!%20I%20want%20to%20automate%20my%20business%20with%20AI." class="btn-primary" target="_blank">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/></svg>
+      Start a Project
+    </a>
+    <a href="mailto:laknanitish2110@gmail.com" class="btn-secondary">Email Us</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <p><strong style="color:var(--white)">VAG Agency</strong> — AI Automation for WhatsApp</p>
+  <p style="margin-top:8px">Built with n8n, Supabase, and Gemini AI | <a href="https://wa.me/919989618192">+91 9989618192</a> | <a href="mailto:laknanitish2110@gmail.com">laknanitish2110@gmail.com</a></p>
+  <p style="margin-top:16px;font-size:12px;color:#475569">&copy; 2026 VAG Agency. All rights reserved.</p>
+</footer>
+
+<script>
+function showIndustry(id) {
+  document.querySelectorAll('.industry-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.industry-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+  event.target.classList.add('active');
+}
+
+// Smooth scroll for nav links
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', function(e) {
+    e.preventDefault();
+    const target = document.querySelector(this.getAttribute('href'));
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+
+// Nav scroll effect
+window.addEventListener('scroll', function() {
+  const nav = document.querySelector('nav');
+  if (window.scrollY > 50) {
+    nav.style.background = 'rgba(10, 37, 64, 0.95)';
+    nav.style.padding = '12px 48px';
+  } else {
+    nav.style.background = 'rgba(10, 37, 64, 0.85)';
+    nav.style.padding = '16px 48px';
+  }
+});
+</script>
